@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Media;
 
-internal class VoiceGreeting
+public class VoiceGreeting
 {
-    public VoiceGreeting()
+    // Method to play a voice greeting
+    public void PlayGreeting()
     {
-    }
-
-    internal void PlayGreeting()
-    {
-        throw new NotImplementedException();
+        try
+        {
+            SoundPlayer player = new SoundPlayer("greeting.wav");
+            player.Play();
+            Console.WriteLine("(Playing voice greeting...)");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error playing sound: " + ex.Message);
+        }
     }
 }

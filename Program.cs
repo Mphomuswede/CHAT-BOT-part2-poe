@@ -1,17 +1,18 @@
 ﻿using System;
-using CHAT_BOT;
 
 class Chatbot
 {
-    private ResponseGenerator responseGenerator;
-    private VoiceGreeting voiceGreeting;
-    private LogoGenerator logoGenerator;
+    // Declare properties for each component
+    public ResponseGenerator responseGenerator;
+    public VoiceGreeting voiceGreeting;
+    public LogoGenerator logoGenerator;
 
     public Chatbot()
     {
+        // Properly initialize the components in the constructor
         responseGenerator = new ResponseGenerator();
-         new VoiceGreeting() { };
-         new LogoGenerator() { };
+        voiceGreeting = new VoiceGreeting();  // Initialize the voiceGreeting property
+        logoGenerator = new LogoGenerator();  // Initialize the logoGenerator property
     }
 
     public void StartChat()
