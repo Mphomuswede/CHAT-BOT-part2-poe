@@ -8,7 +8,7 @@ public class VoiceGreeting
     {
         try
         {
-            SoundPlayer player = new SoundPlayer("greeting.wav");
+            SoundPlayer player = new SoundPlayer("C:\\Users\\RC_Student_lab\\source\\repos\\CHAT BOT\\voive greeting.wav");
             player.Play();
             Console.WriteLine("(Playing voice greeting...)");
         }

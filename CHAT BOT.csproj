@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CHAT BOT IMAGE.jpeg" />
+    <Content Include="voive greeting.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
