@@ -6,7 +6,7 @@ public class LogoGenerator
     // Method to display an ASCII logo (art)
     public void DisplayLogo()
     {
-        string asciiArt = ConvertToASCII(@"C:\Users\RC_Student_lab\source\repos\CHAT BOT\CHAT BOT IMAGE.jpeg"); // Correct path to image
+        string asciiArt = ConvertToASCII(@"C:\Users\RC_Student_lab\source\repos\CHAT BOT\images (60).jpeg"); // Correct path to image
         Console.WriteLine(asciiArt);
     }
 

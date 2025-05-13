@@ -54,7 +54,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CHAT BOT IMAGE.jpeg" />
+    <Content Include="images %2860%29.jpeg" />
     <Content Include="voive greeting.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
