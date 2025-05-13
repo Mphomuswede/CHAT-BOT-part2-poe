@@ -1,12 +1,30 @@
-﻿using System;
+﻿using Microsoft.ML;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Chatbot
+class Chatbot
 {
     private string userName;
-    private string userInterest;
     private bool hasIntroducedName = false;
-    private bool hasSharedInterest = false;
-    private ResponseGenerator responseGenerator = new ResponseGenerator();
+    private MLContext mlContext;
+    private ITransformer mlModel;
+    private PredictionEngine<SentimentData, SentimentPrediction> predEngine;
+
+    private Dictionary<string, string[]> keywordResponses = new Dictionary<string, string[]>
+    {
+        { "password", new[] { "Use strong, unique passwords for each account.", "Avoid using personal details in your passwords." } },
+        { "scam", new[] { "Be cautious of unsolicited messages asking for personal information.", "Verify the source before clicking on links or downloading attachments." } },
+        { "privacy", new[] { "Regularly review your privacy settings on social media platforms.", "Be mindful of the information you share online." } }
+    };
+
+    public Chatbot()
+    {
+        mlContext = new MLContext();
+        // Load your trained model
+        mlModel = mlContext.Model.Load("sentiment_model.zip", out var modelInputSchema);
+        predEngine = mlContext.Model.CreatePredictionEngine<SentimentData, SentimentPrediction>(mlModel);
+    }
 
     public void StartChat()
     {
@@ -28,28 +46,64 @@ public class Chatbot
                 continue;
             }
 
-            if (!hasIntroducedName && userInput.Contains("my name is"))
+            string sentiment = AnalyzeSentiment(userInput);
+            string response = GetResponse(userInput);
+
+            Console.WriteLine($"Chatbot: {response} (Sentiment: {sentiment})");
+        }
+    }
+
+    private string AnalyzeSentiment(string input)
+    {
+        var result = predEngine.Predict(new SentimentData { SentimentText = input });
+        return result.Prediction == 1 ? "Positive" : "Negative";
+    }
+
+    private string GetResponse(string input)
+    {
+        if (!hasIntroducedName)
+        {
+            if (input.Contains("my name is"))
             {
-                userName = userInput.Substring(userInput.IndexOf("is") + 3).Trim();
+                userName = input.Substring(input.IndexOf("is") + 3).Trim();
                 hasIntroducedName = true;
-                Console.WriteLine($"Chatbot: Nice to meet you, {userName}!");
-                continue;
+                return $"Nice to meet you, {userName}!";
             }
-
-            if (!hasSharedInterest && userInput.Contains("i'm interested in"))
+            else
             {
-                userInterest = userInput.Substring(userInput.IndexOf("in") + 3).Trim();
-                hasSharedInterest = true;
-                Console.WriteLine($"Chatbot: Got it! I'll remember that you're interested in {userInterest}.");
-                continue;
+                return "What's your name?";
             }
+        }
 
-            string response = responseGenerator.GetResponse(userInput);
-            if (hasSharedInterest)
+        foreach (var keyword in keywordResponses.Keys)
+        {
+            if (input.Contains(keyword))
             {
-                response += $" Since you're interested in {userInterest}, you might want to explore related topics.";
+                var responses = keywordResponses[keyword];
+                var random = new Random();
+                return responses[random.Next(responses.Length)];
             }
-            Console.WriteLine($"Chatbot: {response}");
+        }
+
+        if (input.Contains("hello"))
+        {
+            return $"Hello {userName}!";
+        }
+        else if (input.Contains("how are you"))
+        {
+            return "I'm doing great, thanks!";
+        }
+        else if (input.Contains("your name"))
+        {
+            return "I'm Chatbot!";
+        }
+        else if (input.Contains("bye"))
+        {
+            return $"Goodbye, {userName}!";
+        }
+        else
+        {
+            return "Can you rephrase?";
         }
     }
 }
